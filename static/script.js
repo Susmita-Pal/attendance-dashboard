@@ -56,7 +56,8 @@ function getLocation() {
   }
 }
 function showPosition(position) {
-  let { latitude, longitude } = position.coords,
+  let {
+      latitude, longitude } = position.coords,
     API_KEY = "ab47cee8a04d4152a920e4e683f058f8";
 
   fetch(
@@ -104,6 +105,7 @@ user_attendance();
 // display views for admin page
 let schoolView = document.getElementById("school_view"),
   individualView = document.getElementById("individual_view");
+
 // display School View
 function displaySchoolView() {
   console.log("school");

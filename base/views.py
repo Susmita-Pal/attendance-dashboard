@@ -3,13 +3,10 @@ from base import datahandler as data
 from django.contrib import messages
 from datetime import datetime
 
-# Create your views here.
-
 
 def userDashboard(request):
     context = {}
-
-    userId = "5IrgYvcmWSG1VQlh3S1z"
+    #userId = "5IrgYvcmWSG1VQlh3S1z"
     userDetails = data.getUserDetails(userId)
     context['userDetails'] = userDetails
 
