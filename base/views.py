@@ -3,12 +3,11 @@ from base import datahandler as data
 from django.contrib import messages
 from datetime import datetime
 
-
 def userDashboard(request):
     context = {}
-    #userId = "5IrgYvcmWSG1VQlh3S1z"
-    userDetails = data.getUserDetails(userId)
-    context['userDetails'] = userDetails
+    userId = "5IrgYvcmWSG1VQlh3S1z"
+    #userDetails = data.getUserDetails(userId)
+    context['userDetails'] = userId
 
     if request.method == 'POST':
         fromDate = request.POST['fromDate']
@@ -26,6 +25,7 @@ def userDashboard(request):
         return render(request, 'user.html', context)
 
     attendanceDetails = data.getAttendance(userId)
+
     if attendanceDetails is None:
         messages.error(request, "Some Error occured! Please try again.")
         return render(request, 'user.html')

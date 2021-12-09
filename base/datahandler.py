@@ -5,28 +5,33 @@ from datetime import datetime, timedelta
 from firebase_admin import auth
 
 cred = credentials.Certificate("./serviceAccountKey.json")
-fb=firebase_admin.initialize_app(cred, {
+fb = firebase_admin.initialize_app(cred, {
     'projectId': "mukhamapp",
 })
 db = firestore.client()
 
 
-#register in firebase
+# register in firebase
 def setUserRegistration(data):
     user = auth.create_user(
         email=data[1]['email'],
         email_verified=True,
         password=data[2]['pwd'],
         disabled=False)
-    x=format(user.uid)
-    print('Sucessfully created new user: {0}',x)
+    x = format(user.uid)
+    print('Successfully created new user: {0}', x)
 
-   # db.collection('Users').add(data)
+    # db.collection('Users').add(data)
     db.collection('Users').document(x).set(data[1])
 
+
 # get user's personal details
-def getUserDetails(userId):
-    ref = db.collection("Users").document(userId)
+def getUserDetails(email):
+    docs = db.collection("Users").where('email', '==', email).stream()
+    for doc in docs:
+        print(f'{doc.id}')
+
+    ref = db.collection("Users").document(doc.id)
 
     doc = ref.get()
     if doc.exists:
@@ -36,15 +41,19 @@ def getUserDetails(userId):
             'fullName': data['fullName'],
             'school': data['school'],
         }
+        print(userDetails)
+        print(doc.id)
         return userDetails
     else:
         return None
 
-#get user's cred verified
-def userVerify(email,pwd):
+
+# get user's cred verified
+def userVerify(email, pwd):
     pass
 
-#get attendance
+
+# get attendance
 def getAttendance(userId, fromDate=datetime.today().replace(day=1), toDate=datetime.today()):
     ref = db.collection("Attendance").document(userId)
 
@@ -94,5 +103,6 @@ def getAttendance(userId, fromDate=datetime.today().replace(day=1), toDate=datet
     }
     return percentage
 
+
 def reset_password(email):
-    return auth.generate_password_reset_link(email,action_code_settings=None)
+    return auth.generate_password_reset_link(email, action_code_settings=None)

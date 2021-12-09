@@ -60,7 +60,7 @@
     <div class="row">
       <div class="col-lg-2" style="width: max-content">
         <img class="cropped rounded-circle border border-1" style="width: 120px; height: 120px; object-fit: cover"
-          src="{% static 'profile-pic.jpg' %}" alt="dp" name="profilepicture" />
+          src=" {{ userDetails.faceId }} " />
       </div>
       <div class="col-lg-7 pt-lg-3 pt-4 ps-lg-5">
         <div class="row">

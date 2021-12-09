@@ -1,11 +1,19 @@
+import firebase_admin
 from django.shortcuts import render, HttpResponse, redirect
+from firebase_admin import credentials, firestore
 from base import datahandler
 from django.contrib import messages
-from base import datahandler
+from base import datahandler,views
 from django.contrib.auth import authenticate, login, logout
 # from django.contrib.auth.models import User
 # from accounts.models import UserAccount, AdminAccount
 # import hashlib
+import firebase_admin
+from firebase_admin import firestore
+from firebase_admin import credentials
+from datetime import datetime, timedelta
+from firebase_admin import auth
+
 
 #forget pwd
 def forgotPassword(request):
@@ -55,6 +63,20 @@ def adminRegister():
 def userLogin(request):
     if request.method=='GET':
         return render(request,'userlogin.html')
+    else:
+        email=request.POST['email']
+        pwd=request.POST['password']
+        #add in the authentication of the firestore
+        if email==pwd:
+            docs = datahandler.db.collection("Users").where('email', '==', email).stream()
+            for doc in docs:
+                uid=doc.id
+                print(f'{doc.id}')
+            ud=datahandler.getUserDetails(email)
+
+            return render(request, 'user.html', {'userDetails':ud,'uid':uid})
+        else:
+            return render(request,'userlogin.html',{'messages':'the email and password did not match'})
 
 
 

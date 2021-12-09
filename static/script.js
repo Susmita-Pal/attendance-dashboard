@@ -55,6 +55,7 @@ function getLocation() {
     alert("Browser not supporting Geolocation.");
   }
 }
+
 function showPosition(position) {
   let {
       latitude, longitude } = position.coords,
