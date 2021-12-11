@@ -131,7 +131,8 @@ def getPresentAbsent(doc):
 
 
 def getDashboardAdmin(fromDate, toDate):
-    total_display={}
+    total_display=[]
+    temp_date_act=[]
     range_of_date = []
     from datetime import datetime, timedelta
     totalDay = 0
@@ -187,13 +188,14 @@ def getDashboardAdmin(fromDate, toDate):
                         tp = tp + present_absent_detail_per_user['p']
                         ta = ta + present_absent_detail_per_user['a']
 
-        total_display[particular_date]={'present':tp,'absent':ta,'days':totalDay}
-        print(total_display)
+
+        temp_date_act.append({'present':tp*100/totalDay,'absent':ta*100/totalDay,'days':totalDay,'date':particular_date})
+        print(temp_date_act)
         tp=0
         ta=0
         totalDay=0
         docs_user = db.collection("Users").where('school', '==', 'SCOPE').stream()
-
+    return temp_date_act
 
 # get user's cred verified
 def userVerify(email, pwd):

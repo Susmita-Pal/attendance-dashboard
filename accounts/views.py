@@ -99,9 +99,9 @@ def dashboardAdmin(request):
     else:
         fromDate=request.POST['fromDate']
         toDate=request.POST['toDate']
-        p=datahandler.getDashboardAdmin(fromDate,toDate)
+        attendance=datahandler.getDashboardAdmin(fromDate,toDate)
         return render(request, 'admin2.html',
-                      {'adminDetails': request.session.get('adminEmail'), 'uid': request.session.get('adminId')})
+                      {'attendance':attendance,'adminDetails': request.session.get('adminEmail'), 'uid': request.session.get('adminId')})
 
 def adminLogin(request):
     if request.method=='GET':

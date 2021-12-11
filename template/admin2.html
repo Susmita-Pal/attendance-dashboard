@@ -159,19 +159,12 @@
                         <tbody>
                             <tr>
                                 {% for data in attendance %}
-                                <td>{{ data.date }}</td>
-                                <!-- morinng -->
-                                {% if data.morningStatus == 1 %}
-                                <td style="background: #1BED88;">Present</td>
-                                {% else %}
-                                <td style="background: #F18787;">Absent</td>
-                                {% endif %}
-                                <!-- evening -->
-                                {% if data.eveningStatus == 1 %}
-                                <td style="background: #1BED88;">Present</td>
-                                {% else %}
-                                <td style="background: #F18787;">Absent</td>
-                                {% endif %}
+                                    <tr>
+                                    <td>{{ data.date }}</td>
+                                    <td style="background: #F9F9F9;">SCOPE</td>
+                                    <td style="background: #F9F9F9;">{{ data.present }}</td>
+                                    <td style="background: #F9F9F9;">{{ data.absent }}</td>
+                                    </tr>
                                 {% endfor %}
                             </tr>
                         </tbody>
