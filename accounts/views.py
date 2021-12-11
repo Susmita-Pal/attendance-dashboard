@@ -39,7 +39,7 @@ def userRegister(request):
             data={1:{'EmpId':empId,'email':email,'fullName':fname,'faceId':faceId,'school':school},2:{'pwd':pwd}}
             print(data)
             datahandler.setUserRegistration(data)
-            return render(request,'userlogin.html')
+            return redirect('userLogin')
         else:
             return render(request,'userRegister.html',{'comment':"The passwords don't match!!!"})
 
@@ -73,14 +73,57 @@ def userLogin(request):
                 uid=doc.id
                 print(f'{doc.id}')
             ud=datahandler.getUserDetails(email)
-
-            return render(request, 'user.html', {'userDetails':ud,'uid':uid})
+            request.session['userEmail']=ud
+            request.session['userId']=uid
+            return redirect('dashboardUser')
+            #return render(request, 'user.html', {'userDetails':ud,'uid':uid})
         else:
             return render(request,'userlogin.html',{'messages':'the email and password did not match'})
 
 
+def dashboardUser(request):
+    if request.method=='GET':
+        return render(request, 'user.html',{'userDetails':request.session.get('userEmail'),'uid':request.session.get('userId')})
+    else:
+        fromDate=request.POST['fromDate']
+        toDate=request.POST['toDate']
+        p=datahandler.getPercentageAttendance(fromDate,toDate,request.session.get('userId'))
+        print("Present days ",p['p'])
+        print("Absent days ", p['a'])
+        print("Total days ", p['total_days'])
+        return render(request, 'user.html',{'attendance':p['attendance'],'userDetails':request.session.get('userEmail'),'uid':request.session.get('userId'),'positivePercent':p['p']*100/p['total_days'], 'negativePercent':p['a']*100/p['total_days']})
+
+def dashboardAdmin(request):
+    if request.method=='GET':
+       return render(request, 'admin2.html',{'adminDetails':request.session.get('adminEmail'),'uid':request.session.get('adminId')})
+    else:
+        fromDate=request.POST['fromDate']
+        toDate=request.POST['toDate']
+        p=datahandler.getDashboardAdmin(fromDate,toDate)
+        return render(request, 'admin2.html',
+                      {'adminDetails': request.session.get('adminEmail'), 'uid': request.session.get('adminId')})
 
 def adminLogin(request):
+    if request.method=='GET':
+        return render(request,'adminlogin.html')
+    else:
+        email = request.POST['email']
+        pwd = request.POST['password']
+        # add in the authentication of the firestore
+        if email == pwd:
+            docs = datahandler.db.collection("Users").where('email', '==', email).stream()
+            for doc in docs:
+                uid = doc.id
+                print(f'{doc.id}')
+            ud = datahandler.getUserDetails(email)
+            request.session['adminEmail'] = ud
+            request.session['adminId'] = uid
+            return redirect('dashboardAdmin')
+            # return render(request, 'user.html', {'userDetails':ud,'uid':uid})
+        else:
+            return render(request, 'adminlogin.html', {'messages': 'the email and password did not match'})
+
+    datahandler.getDashboardAdmin()
     return render(request, 'adminlogin.html')
 
 
