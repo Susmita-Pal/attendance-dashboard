@@ -155,50 +155,52 @@ def getDashboardAdmin(fromDate, toDate):
         range_of_date.append(fromD.strftime('%d-%m-%Y'))
         fromD = fromD + timedelta(days=1)
     print("Range of date to be searched: ",range_of_date)
-    docs_user = db.collection("Users").where('school', '==', 'SCOPE').stream()
+    school=['SCOPE','SENSE','VSL','VISH','VSB','HR','STAFF','RESEARCH SCHOLAR','OTHERS']
     tp = 0
     ta = 0
     present_absent_detail_per_user={}
     present_absent_detail_per_user['p']=0
     present_absent_detail_per_user['a'] = 0
-    for particular_date in range_of_date:
-        pd_m=datetime.strptime(particular_date,"%d-%m-%Y").strftime("%B")
-        print("Date: ", particular_date)
-        for doc in docs_user:
-            print("User id: ", doc.id)
-            for i in range(fromMonthInNum, toMonthInNum + 1):
-                d = datetime.strptime(str(i), "%m")
-                dW = d.strftime("%B")
-                if dW!=pd_m:
-                    continue
-                else:
-                    print("For month-", dW)
-                    # print(doc.id)
-                    uid = doc.id
-                    #date extract
-                    docs_id = db.collection("AttendanceData").document(uid).collection("Years"). \
-                        document('2021').collection('Months').document(dW). \
-                        collection('Days').stream()
-                    # dates time by a user in a month
-                    for doco in docs_id:
-                        AttendanceData_particularDate = list(doco.to_dict().keys())[0]
-                        print("Particular date: ",particular_date,"\tfound the doc: ",AttendanceData_particularDate)
-                        if AttendanceData_particularDate != particular_date:
-                            continue
-                        else:
-                            present_absent_detail_per_user = getPresentAbsent(doco)
-                            totalDay = totalDay + 1
-                            print(present_absent_detail_per_user)
-                            tp = tp + present_absent_detail_per_user['p']
-                            ta = ta + present_absent_detail_per_user['a']
+    for particular_school in school:
+        docs_user = db.collection("Users").where('school', '==', particular_school).stream()
+        for particular_date in range_of_date:
+            pd_m=datetime.strptime(particular_date,"%d-%m-%Y").strftime("%B")
+            print("Date: ", particular_date)
+            for doc in docs_user:
+                print("User id: ", doc.id)
+                for i in range(fromMonthInNum, toMonthInNum + 1):
+                    d = datetime.strptime(str(i), "%m")
+                    dW = d.strftime("%B")
+                    if dW!=pd_m:
+                        continue
+                    else:
+                        print("For month-", dW)
+                        # print(doc.id)
+                        uid = doc.id
+                        #date extract
+                        docs_id = db.collection("AttendanceData").document(uid).collection("Years"). \
+                            document('2021').collection('Months').document(dW). \
+                            collection('Days').stream()
+                        # dates time by a user in a month
+                        for doco in docs_id:
+                            AttendanceData_particularDate = list(doco.to_dict().keys())[0]
+                            print("Particular date: ",particular_date,"\tfound the doc: ",AttendanceData_particularDate)
+                            if AttendanceData_particularDate != particular_date:
+                                continue
+                            else:
+                                present_absent_detail_per_user = getPresentAbsent(doco)
+                                totalDay = totalDay + 1
+                                print(present_absent_detail_per_user)
+                                tp = tp + present_absent_detail_per_user['p']
+                                ta = ta + present_absent_detail_per_user['a']
 
-
-        temp_date_act.append({'present':tp*100/totalDay,'absent':ta*100/totalDay,'days':totalDay,'date':particular_date})
-        print(temp_date_act)
-        tp=0
-        ta=0
-        totalDay=0
-        docs_user = db.collection("Users").where('school', '==', 'SCOPE').stream()
+            if totalDay>0:
+                temp_date_act.append({'present':tp*100/totalDay,'absent':ta*100/totalDay,'days':totalDay,'date':particular_date,'school':particular_school})
+                print(temp_date_act)
+                tp=0
+                ta=0
+                totalDay=0
+                docs_user = db.collection("Users").where('school', '==', particular_school).stream()
     return temp_date_act
 
 # get user's cred verified

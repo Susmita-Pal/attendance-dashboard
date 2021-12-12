@@ -7,15 +7,15 @@ firebase_admin.initialize_app(cred, {
     'projectId': "mukhamapp",
 })
 db = firestore.client()
-'''
-db = firestore.client()
+''''''
 c=0
-docs = db.collection("Users").where('school','==','SCOPE').stream()
+docs = db.collection("Users").where('school','==','gf').stream()
 for doc in docs:
     c=c+1
+    print(doc.id)
 
 print(c)
-'''
+''''''
 
 
 
@@ -147,7 +147,7 @@ def getDashboardAdmin():
 if __name__ == '__main__':
     getDashboardAdmin()
 '''
-docs=db.collection("AttendanceData").document('Dd2IJgKH3YP6nd0okJ7D88OqaZF3').collection("Years"). \
+'''docs=db.collection("AttendanceData").document('Dd2IJgKH3YP6nd0okJ7D88OqaZF3').collection("Years"). \
         document('2021').collection('Months').document('December').collection('Days').stream()
 print(docs)
 c=0
@@ -158,3 +158,4 @@ for doc in docs:
 
 print(c)
 
+'''

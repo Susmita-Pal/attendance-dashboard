@@ -161,14 +161,14 @@
                                 {% for data in attendance %}
                                     <tr>
                                     <td>{{ data.date }}</td>
-                                    <td style="background: #F9F9F9;">SCOPE</td>
+                                    <td style="background: #F9F9F9;">{{ data.school }}</td>
                                     <td style="background: #F9F9F9;">{{ data.present }}</td>
                                     <td style="background: #F9F9F9;">{{ data.absent }}</td>
                                     </tr>
                                 {% endfor %}
                             </tr>
                         </tbody>
-                    </table>
+                     </table>
                 </div>
                 <!-- INDIVIDUAL VIEW -->
                 <div id="individual_view" style="display: none;">
