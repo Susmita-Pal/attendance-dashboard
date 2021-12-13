@@ -19,11 +19,14 @@ config = {
   "apiKey": "AIzaSyBexJb_2s5P3z96b75fU2jhZA8MQAMyuHQ",
   "authDomain": "mukhamapp.firebaseapp.com",
   "databaseURL": "https://mukhamapp-default-rtdb.firebaseio.com",
-  "storageBucket": "mukhamapp.appspot.com"
+  "storageBucket": "mukhamapp.appspot.com",
+    "messagingSenderId": "1017209631493",
+    "appId": "1:1017209631493:web:3ac83a83fc41438d05fd6c",
+   "measurementId": "G-T1C68K1DBQ"
 }
 
 firebase = pyrebase.initialize_app(config)
-
+auth=firebase.auth()
 
 #forget pwd
 def forgotPassword(request):
@@ -48,7 +51,15 @@ def userRegister(request):
         if pwd==cpwd:
             data={1:{'EmpId':empId,'email':email,'fullName':fname,'faceId':faceId,'school':school},2:{'pwd':pwd}}
             print(data)
-            datahandler.setUserRegistration(data)
+            try:
+                user=auth.create_user_with_email_and_password(email,pwd)
+                token=auth.get_account_info(user['idToken'])
+                uid=token['users'][0]['localId']
+                print("uid",uid)
+                datahandler.setUserRegistration(data,uid)
+                print("Successfully created new user")
+            except:
+                print("Username exists")
             return redirect('userLogin')
         else:
             return render(request,'userRegister.html',{'comment':"The passwords don't match!!!"})
@@ -77,7 +88,9 @@ def userLogin(request):
         email=request.POST['email']
         pwd=request.POST['password']
         #add in the authentication of the firestore
-        if auth.sign_in_with_email_and_password(email,pwd):
+        try:
+            auth.sign_in_with_email_and_password(email,pwd)
+            print("Yay, you successfully signed in!!!")
             docs = datahandler.db.collection("Users").where('email', '==', email).stream()
             for doc in docs:
                 uid=doc.id
@@ -87,7 +100,8 @@ def userLogin(request):
             request.session['userId']=uid
             return redirect('dashboardUser')
             #return render(request, 'user.html', {'userDetails':ud,'uid':uid})
-        else:
+        except:
+            print("Invalid username/password please try again")
             return render(request,'userlogin.html',{'messages':'the email and password did not match'})
 
 
@@ -145,9 +159,9 @@ def adminLogin(request):
 
 # Logout
 def userLogout(request):
-    if request.user.is_authenticated:
+    if request.session.get('userEmail') is not None:
         logout(request)
-        return redirect('userLogin')
+        return redirect('land')
     else:
         return redirect('userLogin')
 

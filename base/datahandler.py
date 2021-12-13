@@ -12,13 +12,13 @@ db = firestore.client()
 
 
 # register in firebase
-def setUserRegistration(data):
-    user = auth.create_user(
-        email=data[1]['email'],
-        email_verified=True,
-        password=data[2]['pwd'],
-        disabled=False)
-    x = format(user.uid)
+def setUserRegistration(data,uid):
+    #user = auth.create_user(
+    #    email=data[1]['email'],
+    #    email_verified=True,
+    #    password=data[2]['pwd'],
+    #    disabled=False)
+    x = uid
     print('Successfully created new user: {0}', x)
 
     # db.collection('Users').add(data)
