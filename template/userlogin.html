@@ -94,6 +94,12 @@
     </div>
     {% endif %}
 
+{% if resetPwd %}
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+       <br> {{resetPwd}}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endif %}
 
 
     <!-- Optional JavaScript; choose one of the two! -->

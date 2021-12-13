@@ -34,9 +34,9 @@ def forgotPassword(request):
         return render(request,'resetPwd.html')
     else:
         email=request.POST['email']
-        link=datahandler.reset_password(email)
-        print(link)
-        return render(request,'resetPwd.html',{'link':link})
+        resetPwdEmail=auth.send_password_reset_email(email)
+        request.session['resetPwd']="Reset the password using the link sent to your email id"
+        return redirect('userLogin')
 
 #register
 def userRegister(request):
@@ -53,13 +53,15 @@ def userRegister(request):
             print(data)
             try:
                 user=auth.create_user_with_email_and_password(email,pwd)
+                emailId=auth.send_email_verification(user['idToken'])
                 token=auth.get_account_info(user['idToken'])
                 uid=token['users'][0]['localId']
                 print("uid",uid)
                 datahandler.setUserRegistration(data,uid)
                 print("Successfully created new user")
             except:
-                print("Username exists")
+                print("Registration failed")
+                return render(request,'userRegister.html',{'errRegistration':"Registration Failed"})
             return redirect('userLogin')
         else:
             return render(request,'userRegister.html',{'comment':"The passwords don't match!!!"})
@@ -83,23 +85,31 @@ def adminRegister():
 
 def userLogin(request):
     if request.method=='GET':
-        return render(request,'userlogin.html')
+        if request.session.get('resetPwd') is not None:
+            return render(request,'userlogin.html',{'resetPwd':request.session.get('resetPwd')})
+        else:
+            return render(request, 'userlogin.html')
     else:
         email=request.POST['email']
         pwd=request.POST['password']
         #add in the authentication of the firestore
         try:
-            auth.sign_in_with_email_and_password(email,pwd)
-            print("Yay, you successfully signed in!!!")
-            docs = datahandler.db.collection("Users").where('email', '==', email).stream()
-            for doc in docs:
-                uid=doc.id
-                print(f'{doc.id}')
-            ud=datahandler.getUserDetails(email)
-            request.session['userEmail']=ud
-            request.session['userId']=uid
-            return redirect('dashboardUser')
-            #return render(request, 'user.html', {'userDetails':ud,'uid':uid})
+            user=auth.sign_in_with_email_and_password(email,pwd)
+            token = auth.get_account_info(user['idToken'])
+            emailVer=token['users'][0]['emailVerified']
+            if emailVer == True:
+                print("Yay, you successfully signed in!!!")
+                docs = datahandler.db.collection("Users").where('email', '==', email).stream()
+                for doc in docs:
+                    uid=doc.id
+                    print(f'{doc.id}')
+                ud=datahandler.getUserDetails(email)
+                request.session['userEmail']=ud
+                request.session['userId']=uid
+                return redirect('dashboardUser')
+                #return render(request, 'user.html', {'userDetails':ud,'uid':uid})
+            else:
+                return render(request,'userlogin.html',{'messages':'Email verification is yet to done'})
         except:
             print("Invalid username/password please try again")
             return render(request,'userlogin.html',{'messages':'the email and password did not match'})
@@ -108,6 +118,7 @@ def userLogin(request):
 def dashboardUser(request):
     if request.method=='GET':
         if request.session.get('userEmail') is not None:
+            del request.session['resetPwd']
             return render(request, 'user.html',{'userDetails':request.session.get('userEmail'),'uid':request.session.get('userId')})
         else:
             return redirect('userLogin')
