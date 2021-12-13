@@ -52,7 +52,8 @@ def getUserDetails(email):
 def getPercentageAttendance(fromDate, toDate, uid):
     range_of_date = []
     from datetime import datetime, timedelta
-
+    total_present_in_range=0
+    total_absent_in_range=0
     first_date = fromDate
     to_date = toDate
     fromD = datetime.strptime(first_date, "%Y-%m-%d").date()
@@ -105,12 +106,15 @@ def getPercentageAttendance(fromDate, toDate, uid):
             print(per_day_attendance_status)
             attendance_dict.append(per_day_attendance_status)
         o = o + 1
-    total_present_in_range = c
-    total_absent_in_range = total_days - c
-    # print(total_present_in_range,total_absent_in_range)
-    print(attendance_dict)
+
+    if o>0:
+        total_present_in_range = (c*100)/total_days
+        total_absent_in_range = (total_days - c)*100/total_days
+        # print(total_present_in_range,total_absent_in_range)
+        print(attendance_dict)
+
     return {'p': total_present_in_range, 'a': total_absent_in_range, 'total_days': total_days,
-            'attendance': attendance_dict}
+                'attendance': attendance_dict}
 
 
 def getPresentAbsent(doc):

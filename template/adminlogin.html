@@ -51,21 +51,31 @@
                         <a class="nav-link active fw-bold text-muted pb-1" aria-current="page"
                             href="/">Home</a>
                     </li>
+                     <li class="nav-item me-5">
+                        <a class="nav-link active fw-bold text-muted pb-1" aria-current="page"
+                            href="/account/forgot-password-admin/">Reset Password</a>
+                    </li>
                 </ul>
             </div>
 
-            <div>
-                <a href="/account/forgot-password/">Forgot Password</a>
-            </div>
         </div>
     </nav>
-    <!-- status message -->
-    {% for message in messages %}
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-        <strong>Success!</strong>&nbsp; {{message}}
+
+      <!-- status message -->
+
+         {% if messages %}
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+       <br> {{messages}}
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
-    {% endfor %}
+    {% endif %}
+
+{% if resetPwd %}
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+       <br> {{resetPwd}}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endif %}
 
     <!-- main -->
     <div class="container col-6 mt-5">

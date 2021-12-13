@@ -118,7 +118,8 @@ def userLogin(request):
 def dashboardUser(request):
     if request.method=='GET':
         if request.session.get('userEmail') is not None:
-            del request.session['resetPwd']
+            if request.session.get('resetPwd') is not None:
+                del request.session['resetPwd']
             return render(request, 'user.html',{'userDetails':request.session.get('userEmail'),'uid':request.session.get('userId')})
         else:
             return redirect('userLogin')
@@ -129,7 +130,7 @@ def dashboardUser(request):
         print("Present days ",p['p'])
         print("Absent days ", p['a'])
         print("Total days ", p['total_days'])
-        return render(request, 'user.html',{'attendance':p['attendance'],'userDetails':request.session.get('userEmail'),'uid':request.session.get('userId'),'positivePercent':p['p']*100/p['total_days'], 'negativePercent':p['a']*100/p['total_days']})
+        return render(request, 'user.html',{'attendance':p['attendance'],'userDetails':request.session.get('userEmail'),'uid':request.session.get('userId'),'positivePercent':p['p'], 'negativePercent':p['a']})
 
 def dashboardAdmin(request):
     if request.method=='GET':
@@ -146,26 +147,35 @@ def dashboardAdmin(request):
 
 def adminLogin(request):
     if request.method=='GET':
-        return render(request,'adminlogin.html')
-    else:
-        email = request.POST['email']
-        pwd = request.POST['password']
-        # add in the authentication of the firestore
-        if email == pwd:
-            docs = datahandler.db.collection("Users").where('email', '==', email).stream()
-            for doc in docs:
-                uid = doc.id
-                print(f'{doc.id}')
-            ud = datahandler.getUserDetails(email)
-            request.session['adminEmail'] = ud
-            request.session['adminId'] = uid
-            return redirect('dashboardAdmin')
-            # return render(request, 'user.html', {'userDetails':ud,'uid':uid})
+        if request.session.get('resetPwdAdmin') is not None:
+            return render(request, 'adminlogin.html', {'resetPwd': request.session.get('resetPwd')})
         else:
+            return render(request, 'adminlogin.html')
+    else:
+        email=request.POST['email']
+        pwd=request.POST['password']
+        #add in the authentication of the firestore
+        try:
+            user = auth.sign_in_with_email_and_password(email, pwd)
+            token = auth.get_account_info(user['idToken'])
+            print(token)
+            emailVer = token['users'][0]['emailVerified']
+            if emailVer == True:
+                print("Yay, you successfully signed in!!!")
+                docs = datahandler.db.collection("Users").where('email', '==', email).stream()
+                for doc in docs:
+                    uid = doc.id
+                    print(f'{doc.id}')
+                ud = datahandler.getUserDetails(email)
+                request.session['adminEmail'] = ud
+                request.session['adminId'] = uid
+                return redirect('dashboardAdmin')
+                # return render(request, 'user.html', {'userDetails':ud,'uid':uid})
+            else:
+                return render(request, 'adminlogin.html', {'messages': 'Email verification is yet to done'})
+        except:
+            print("Invalid username/password please try again")
             return render(request, 'adminlogin.html', {'messages': 'the email and password did not match'})
-
-    datahandler.getDashboardAdmin()
-    return render(request, 'adminlogin.html')
 
 
 # Logout
@@ -178,8 +188,17 @@ def userLogout(request):
 
 
 def adminLogout(request):
-    if request.user.is_authenticated:
+    if request.session.get('adminEmail') is not None:
         logout(request)
-        return redirect('adminLogin')
+        return redirect('land')
     else:
+        return redirect('adminLogin')
+
+def forgotPasswordAdmin(request):
+    if request.method=='GET':
+        return render(request,'resetPwdAdmin.html')
+    else:
+        email=request.POST['email']
+        resetPwdEmail=auth.send_password_reset_email(email)
+        request.session['resetPwdAdmin']="Reset the password using the link sent to your email id"
         return redirect('adminLogin')
