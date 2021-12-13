@@ -4,4 +4,5 @@ from base import views
 urlpatterns = [
     path('user-dashboard/', views.userDashboard, name='userDashboard'),
     path('admin-dashboard/', views.adminDashboard, name='adminDashboard'),
+    path('',views.land,name='land')
 ]

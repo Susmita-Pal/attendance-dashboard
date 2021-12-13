@@ -13,6 +13,16 @@ from firebase_admin import firestore
 from firebase_admin import credentials
 from datetime import datetime, timedelta
 from firebase_admin import auth
+import pyrebase
+
+config = {
+  "apiKey": "AIzaSyBexJb_2s5P3z96b75fU2jhZA8MQAMyuHQ",
+  "authDomain": "mukhamapp.firebaseapp.com",
+  "databaseURL": "https://mukhamapp-default-rtdb.firebaseio.com",
+  "storageBucket": "mukhamapp.appspot.com"
+}
+
+firebase = pyrebase.initialize_app(config)
 
 
 #forget pwd
@@ -67,7 +77,7 @@ def userLogin(request):
         email=request.POST['email']
         pwd=request.POST['password']
         #add in the authentication of the firestore
-        if email==pwd:
+        if auth.sign_in_with_email_and_password(email,pwd):
             docs = datahandler.db.collection("Users").where('email', '==', email).stream()
             for doc in docs:
                 uid=doc.id
@@ -83,7 +93,10 @@ def userLogin(request):
 
 def dashboardUser(request):
     if request.method=='GET':
-        return render(request, 'user.html',{'userDetails':request.session.get('userEmail'),'uid':request.session.get('userId')})
+        if request.session.get('userEmail') is not None:
+            return render(request, 'user.html',{'userDetails':request.session.get('userEmail'),'uid':request.session.get('userId')})
+        else:
+            return redirect('userLogin')
     else:
         fromDate=request.POST['fromDate']
         toDate=request.POST['toDate']
@@ -95,7 +108,10 @@ def dashboardUser(request):
 
 def dashboardAdmin(request):
     if request.method=='GET':
-       return render(request, 'admin2.html',{'adminDetails':request.session.get('adminEmail'),'uid':request.session.get('adminId')})
+        if request.session.get('adminEmail') is not None:
+            return render(request, 'admin2.html',{'adminDetails':request.session.get('adminEmail'),'uid':request.session.get('adminId')})
+        else:
+            return render(request,'adminlogin.html')
     else:
         fromDate=request.POST['fromDate']
         toDate=request.POST['toDate']

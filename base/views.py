@@ -37,3 +37,6 @@ def userDashboard(request):
 
 def adminDashboard(request):
         return render(request, 'admin.html')
+
+def land(request):
+    return render(request,'index.html')
