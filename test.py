@@ -9,7 +9,7 @@ firebase_admin.initialize_app(cred, {
 db = firestore.client()
 ''''''
 c=0
-docs = db.collection("Users").where('school','==','gf').stream()
+docs = db.collection("Admins").get()
 for doc in docs:
     c=c+1
     print(doc.id)

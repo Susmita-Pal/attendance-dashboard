@@ -146,6 +146,7 @@ def dashboardAdmin(request):
                       {'attendance':attendance,'adminDetails': request.session.get('adminEmail'), 'uid': request.session.get('adminId')})
 
 def adminLogin(request):
+    c=0
     if request.method=='GET':
         if request.session.get('resetPwdAdmin') is not None:
             return render(request, 'adminlogin.html', {'resetPwd': request.session.get('resetPwd')})
@@ -158,18 +159,24 @@ def adminLogin(request):
         try:
             user = auth.sign_in_with_email_and_password(email, pwd)
             token = auth.get_account_info(user['idToken'])
-            print(token)
+            uid = token['users'][0]['localId']
+            print('uid',uid)
             emailVer = token['users'][0]['emailVerified']
             if emailVer == True:
-                print("Yay, you successfully signed in!!!")
-                docs = datahandler.db.collection("Users").where('email', '==', email).stream()
+                docs = datahandler.db.collection("Admins").get()
                 for doc in docs:
-                    uid = doc.id
-                    print(f'{doc.id}')
-                ud = datahandler.getUserDetails(email)
-                request.session['adminEmail'] = ud
-                request.session['adminId'] = uid
-                return redirect('dashboardAdmin')
+                    if uid==doc.id:
+                        c=c+1
+                        break
+                print(c)
+                if c!=0:
+                    print("Yay, you successfully signed in!!!")
+                    ud = datahandler.getUserDetails(email)
+                    request.session['adminEmail'] = ud
+                    request.session['adminId'] = uid
+                    return redirect('dashboardAdmin')
+                else:
+                    return render(request,'adminlogin.html',{'adminNotLogin':'You are not an admin'})
                 # return render(request, 'user.html', {'userDetails':ud,'uid':uid})
             else:
                 return render(request, 'adminlogin.html', {'messages': 'Email verification is yet to done'})
