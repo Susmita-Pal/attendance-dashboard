@@ -131,7 +131,6 @@ ipython==7.20.0
 ipython_genutils==0.2.0
 isort==5.7.0
 itsdangerous==1.1.0
-jdcal==1.0
 jedi==0.18.0
 Jinja2==2.11.2
 jsonschema==3.2.0
