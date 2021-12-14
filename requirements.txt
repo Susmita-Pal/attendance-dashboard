@@ -317,7 +317,6 @@ Rx==3.1.1
 scapy==2.4.4
 scipy==1.6.0
 secure==0.2.1
-selenium==4.0.0a1
 service-identity==18.1.0
 setproctitle==1.2.1
 setuptools==57.0.0
@@ -330,7 +329,6 @@ smmap==3.0.4
 smoke-zephyr==2.0.1
 sortedcontainers==2.1.0
 soupsieve==2.1
-speaklater==1.4
 SQLAlchemy==1.3.22
 sqlalchemy-schemadisplay==1.3
 sqlparse==0.4.1
@@ -343,7 +341,6 @@ Tempita==0.5.2
 termcolor==1.1.0
 terminaltables==3.1.0
 texttable==1.6.3
-theHarvester==3.2.3
 tld==0.11.11
 tls-parser==1.2.2
 toml==0.10.2
@@ -356,7 +353,6 @@ txaio==20.4.1
 typing-extensions==3.7.4.3
 tzlocal==2.1
 u-msgpack-python==2.3.0
-unattended-upgrades==0.1
 unicodecsv==0.14.1
 Unidecode==1.2.0
 uritemplate==4.1.1
@@ -364,7 +360,7 @@ urllib3==1.26.2
 urwid==2.1.2
 uvloop==0.14.0
 venusian==3.0.0
-virtualenv==20.10.0+ds
+virtualenv==20.10.0
 wafw00f==2.1.0
 wapiti3==3.0.3
 wcwidth==0.1.9
@@ -378,11 +374,9 @@ wfuzz==3.1.0
 wheel==0.36.2
 whitenoise==5.2.0
 whois==0.8
-wifite==2.5.8
 winacl==0.0.2
 wrapt==1.12.1
 wsaccel==0.6.2
-wsproto==0.15.0g
 WTForms==2.2.1
 xcffib==0.8.1
 xdg==5
