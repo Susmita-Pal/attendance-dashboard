@@ -23,3 +23,4 @@ python_jwt==2.0.1
 pycryptodome==3.12.0
 gcloud
 dj-database-url
+psycopg2
