@@ -1,7 +1,8 @@
 import firebase_admin
 from firebase_admin import firestore
 from firebase_admin import credentials
-from datetime import datetime, timedelta
+import datetime as d
+from datetime import datetime,timedelta
 from firebase_admin import auth
 
 cred = credentials.Certificate("./serviceAccountKey.json")
@@ -9,7 +10,6 @@ fb = firebase_admin.initialize_app(cred, {
     'projectId': "mukhamapp",
 })
 db = firestore.client()
-
 
 # register in firebase
 def setUserRegistration(data,uid):
@@ -51,70 +51,138 @@ def getUserDetails(email):
 # send percentage
 def getPercentageAttendance(fromDate, toDate, uid):
     range_of_date = []
-    from datetime import datetime, timedelta
     total_present_in_range=0
     total_absent_in_range=0
     first_date = fromDate
     to_date = toDate
+    total_days=0
     fromD = datetime.strptime(first_date, "%Y-%m-%d").date()
     toD = datetime.strptime(to_date, "%Y-%m-%d").date()
     fromD.strftime('%d-%m-%Y')
     toD.strftime('%d-%m-%Y')
+
     # print(toD.date()+timedelta(days=1))
-    while fromD.strftime('%d-%m-%Y') <= toD.strftime('%d-%m-%Y'):
+    while fromD<= toD:
         print(fromD.strftime('%d-%m-%Y'))
         range_of_date.append(fromD.strftime('%d-%m-%Y'))
         fromD = fromD + timedelta(days=1)
-    docs = db.collection("AttendanceData").document(uid).collection("Years"). \
-        document('2021').collection('Months').stream()
-
-    docs = db.collection("AttendanceData").document(uid).collection("Years"). \
-        document('2021').collection('Months').document('November'). \
-        collection('Days').stream()
-
-    c = 0.0
-    total_days = 0
     print(range_of_date)
-    attendance_dict = []
-    o = 0
-    for doc in docs:
-        per_day_attendance_status = {}
-        # extracts the documents i.e., dates marked in Days collection i.e.,for sure present dates-half/full
-        get_date = list(doc.to_dict().keys())[0]
-        if get_date in range_of_date:
-            per_day_attendance_status["date"] = get_date
-            print(get_date)
-            total_days = total_days + 1
-            for i in range(0, 2):
-                z = list(doc.to_dict().values())[0][i]
-                l = len(list(doc.to_dict().values())[0])
-                print(z)
-                # morning attendance data
-                if i == 0:
-                    if isinstance(z, (bool)):
-                        per_day_attendance_status["morningStatus"] = 0
-                    else:
-                        per_day_attendance_status["morningStatus"] = 1
-                        c = c + 0.5
-                # evening attendance data
-                elif i == 1:
-                    if isinstance(z, (bool)):
-                        per_day_attendance_status["eveningStatus"] = 0
-                    else:
-                        per_day_attendance_status["eveningStatus"] = 1
-                        c = c + 0.5
-            print(per_day_attendance_status)
-            attendance_dict.append(per_day_attendance_status)
-        o = o + 1
+    fromMonthInNum = fromD.month
+    toMonthInNum = toD.month
+    print(fromMonthInNum,toMonthInNum)
+    s=0
+    print(type(fromMonthInNum))
 
-    if o>0:
-        total_present_in_range = (c*100)/total_days
-        total_absent_in_range = (total_days - c)*100/total_days
-        # print(total_present_in_range,total_absent_in_range)
-        print(attendance_dict)
+    if toMonthInNum==fromMonthInNum:
+        s=1
+        month = d.date(2001, fromMonthInNum, 1).strftime('%B')
+        print(month)
+        docs = db.collection("AttendanceData").document(uid).collection("Years"). \
+            document('2021').collection('Months').document(month). \
+            collection('Days').stream()
+        c = 0.0
+        total_days = 0
+        print(range_of_date)
+        attendance_dict = []
+        o = 0
+        for doc in docs:
+            per_day_attendance_status = {}
+            # extracts the documents i.e., dates marked in Days collection i.e.,for sure present dates-half/full
+            get_date = list(doc.to_dict().keys())[0]
+            if get_date in range_of_date:
+                per_day_attendance_status["date"] = get_date
+                print(get_date)
+                total_days = total_days + 1
+                for i in range(0, 2):
+                    z = list(doc.to_dict().values())[0][i]
+                    l = len(list(doc.to_dict().values())[0])
+                    print(z)
+                    # morning attendance data
+                    if i == 0:
+                        if isinstance(z, (bool)):
+                            per_day_attendance_status["morningStatus"] = 0
+                        else:
+                            per_day_attendance_status["morningStatus"] = 1
+                            c = c + 0.5
+                    # evening attendance data
+                    elif i == 1:
+                        if isinstance(z, (bool)):
+                            per_day_attendance_status["eveningStatus"] = 0
+                        else:
+                            per_day_attendance_status["eveningStatus"] = 1
+                            c = c + 0.5
+                print(per_day_attendance_status)
+                attendance_dict.append(per_day_attendance_status)
 
-    return {'p': total_present_in_range, 'a': total_absent_in_range, 'total_days': total_days,
+        if total_days> 0:
+            total_present_in_range = (c * 100) / total_days
+            total_absent_in_range = (total_days - c) * 100 / total_days
+            # print(total_present_in_range,total_absent_in_range)
+            print(attendance_dict)
+
+        return {'p': total_present_in_range, 'a': total_absent_in_range, 'total_days': total_days,
                 'attendance': attendance_dict}
+    check=False
+
+    if fromMonthInNum!=toMonthInNum:
+        while fromMonthInNum<=toMonthInNum:
+            month = d.date(2001, fromMonthInNum, 1).strftime('%B')
+            print(month)
+            docs = db.collection("AttendanceData").document(uid).collection("Years"). \
+                document('2021').collection('Months').document(month). \
+                collection('Days').stream()
+            for doc in docs:
+                check=True
+                print("Yes exists!")
+                break
+            if check==True:
+                c = 0.0
+                total_days = 0
+                print(range_of_date)
+                attendance_dict = []
+                o = 0
+                for doc in docs:
+                    print("I am inside")
+                    per_day_attendance_status = {}
+                    # extracts the documents i.e., dates marked in Days collection i.e.,for sure present dates-half/full
+                    get_date = list(doc.to_dict().keys())[0]
+                    print(range_of_date)
+                    if get_date in range_of_date:
+                        per_day_attendance_status["date"] = get_date
+                        print(get_date)
+                        total_days = total_days + 1
+                        for i in range(0, 2):
+                            z = list(doc.to_dict().values())[0][i]
+                            l = len(list(doc.to_dict().values())[0])
+                            print(z)
+                            # morning attendance data
+                            if i == 0:
+                                if isinstance(z, (bool)):
+                                    per_day_attendance_status["morningStatus"] = 0
+                                else:
+                                    per_day_attendance_status["morningStatus"] = 1
+                                    c = c + 0.5
+                            # evening attendance data
+                            elif i == 1:
+                                if isinstance(z, (bool)):
+                                    per_day_attendance_status["eveningStatus"] = 0
+                                else:
+                                    per_day_attendance_status["eveningStatus"] = 1
+                                    c = c + 0.5
+                        print(per_day_attendance_status)
+                        attendance_dict.append(per_day_attendance_status)
+                    o = o + 1
+            fromMonthInNum=fromMonthInNum+1
+
+        print("o",o)
+        if o>0:
+            total_present_in_range = (c*100)/o
+            total_absent_in_range = (o- c)*100/o
+            # print(total_present_in_range,total_absent_in_range)
+            print(attendance_dict)
+
+        return {'p': total_present_in_range, 'a': total_absent_in_range, 'total_days':o,
+                    'attendance': attendance_dict}
 
 
 def getPresentAbsent(doc):
@@ -138,7 +206,6 @@ def getDashboardAdmin(fromDate, toDate):
     total_display=[]
     temp_date_act=[]
     range_of_date = []
-    from datetime import datetime, timedelta
     totalDay = 0
     first_date = fromDate
     to_date = toDate

@@ -130,7 +130,7 @@ def dashboardUser(request):
         print("Present days ",p['p'])
         print("Absent days ", p['a'])
         print("Total days ", p['total_days'])
-        return render(request, 'user.html',{'attendance':p['attendance'],'userDetails':request.session.get('userEmail'),'uid':request.session.get('userId'),'positivePercent':p['p'], 'negativePercent':p['a']})
+        return render(request, 'user.html',{'attendance':p['attendance'],'total':p['total_days'],'userDetails':request.session.get('userEmail'),'uid':request.session.get('userId'),'positivePercent':p['p'], 'negativePercent':p['a']})
 
 def dashboardAdmin(request):
     if request.method=='GET':
@@ -248,5 +248,5 @@ def dashboardAdminIndividualView(request):
         print("Absent days ", p['a'])
         print("Total days ", p['total_days'])
         return render(request, 'adminIndividual.html',
-                      {'attendance': p['attendance'], 'adminDetails': request.session.get('adminEmail'),
+                      {'attendance': p['attendance'],'total':p['total_days'] ,'adminDetails': request.session.get('adminEmail'),
                        'uid': request.session.get('adminId'), 'positivePercent': p['p'], 'negativePercent': p['a']})

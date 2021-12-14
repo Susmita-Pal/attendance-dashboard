@@ -9,7 +9,9 @@ firebase_admin.initialize_app(cred, {
 db = firestore.client()
 ''''''
 c=0
-docs = db.collection("Users").where('email', '==', 'bhavani.20phd7017@vitap.ac.in').get()
+docs = db.collection("AttendanceData").document('4zLExUp1HVSvwxgLUqGEoglL6Xg2').collection("Years"). \
+                document('2021').collection('Months').document('D'). \
+                collection('Days').stream()
 for doc in docs:
     print(doc.id)
 
@@ -158,3 +160,17 @@ for doc in docs:
 print(c)
 
 '''
+'''import datetime
+
+month = datetime.date(2001,12,1).strftime('%B')
+
+print (month)'''
+from datetime import datetime,timedelta
+fromD=datetime.strptime("29-11-2021","%d-%m-%Y")
+toD=datetime.strptime("15-12-2021","%d-%m-%Y")
+range_of_date=[]
+while fromD<= toD:
+    print(fromD.strftime('%d-%m-%Y'))
+    range_of_date.append(fromD.strftime('%d-%m-%Y'))
+    fromD = fromD + timedelta(days=1)
+print(range_of_date)
