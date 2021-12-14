@@ -9,9 +9,8 @@ firebase_admin.initialize_app(cred, {
 db = firestore.client()
 ''''''
 c=0
-docs = db.collection("Admins").get()
+docs = db.collection("Users").where('email', '==', 'bhavani.20phd7017@vitap.ac.in').get()
 for doc in docs:
-    c=c+1
     print(doc.id)
 
 print(c)

@@ -26,13 +26,18 @@
     <!-- <link rel="shortcut icon" type="image/jpg" href="https://vitap.ac.in/wp-content/uploads/2020/07/cropped-logo_icon-1-32x32.png" /> -->
 
     <title>User Login | Attendance Dashboard</title>
-
-    <style>
+<style>
         .border-bottom {
             border-bottom: 3px solid rgb(0, 132, 255) !important;
             background: none;
             border: 0;
         }
+        .uuse{
+            background-color:rgb(234, 239, 240);
+            -webkit-box-shadow: 0 30px 60px 0 rgba(0,0,0,0.3);
+  box-shadow: 0 30px 60px 0 rgba(0,0,0,0.3);
+        }
+
     </style>
 </head>
 
@@ -69,7 +74,8 @@
 
     <!-- main -->
     <div class="container col-6 mt-5">
-        <h2 class="text-center fw-light">User Registration</h2>
+        <div class="uuse center">
+        <h2 class="text-center fw-light"><b><b><br>User Registration</b></b></h2>
         <form action="" method="post" class="my-5 ms-5 ps-5 w-75">
             {% csrf_token %}
             <div class="mb-4" id="fname">
@@ -107,9 +113,11 @@
                 <input class="border-bottom d-block p-2 w-100 mt-2" type="password" name="cpwd" id="cpwd"
                 placeholder="Set Password">
             </div>
-            <input type="submit" id="sign_up_submit" class="mt-5 btn btn-info px-5 fw-bold">
+            <input type="submit" id="sign_up_submit" class="mt-5 btn btn-info px-5 fw-bold"><br><br>
         </form>
     </div>
+
+</div>
     <div style="color: red;align-items: center">{{ comment }}</div>
 
 

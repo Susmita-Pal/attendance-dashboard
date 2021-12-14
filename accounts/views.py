@@ -137,7 +137,7 @@ def dashboardAdmin(request):
         if request.session.get('adminEmail') is not None:
             return render(request, 'admin2.html',{'adminDetails':request.session.get('adminEmail'),'uid':request.session.get('adminId')})
         else:
-            return render(request,'adminlogin.html')
+            return redirect('adminLogin')
     else:
         fromDate=request.POST['fromDate']
         toDate=request.POST['toDate']
@@ -209,3 +209,44 @@ def forgotPasswordAdmin(request):
         resetPwdEmail=auth.send_password_reset_email(email)
         request.session['resetPwdAdmin']="Reset the password using the link sent to your email id"
         return redirect('adminLogin')
+
+def dashboardAdminSchoolView(request):
+    if request.method == 'GET':
+        if request.session.get('adminEmail') is not None:
+            return render(request, 'adminSchool.html',
+                          {'adminDetails': request.session.get('adminEmail'), 'uid': request.session.get('adminId')})
+        else:
+            return redirect('adminLogin')
+    else:
+        fromDate = request.POST['fromDate']
+        toDate = request.POST['toDate']
+        attendance = datahandler.getDashboardAdmin(fromDate, toDate)
+        return render(request, 'adminSchool.html',
+                      {'attendance': attendance, 'adminDetails': request.session.get('adminEmail'),
+                       'uid': request.session.get('adminId')})
+
+def dashboardAdminIndividualView(request):
+    if request.method == 'GET':
+        if request.session.get('adminEmail') is not None:
+            return render(request, 'adminIndividual.html',{'adminDetails':request.session.get('adminEmail'),'uid':request.session.get('adminId')})
+        else:
+            return redirect('adminLogin')
+    else:
+        c=0
+        fromDate = request.POST['fromDate']
+        toDate = request.POST['toDate']
+        email=request.POST['emailAddr']
+        docs = datahandler.db.collection("Users").where('email', '==', email).get()
+        for doc in docs:
+            uid=doc.id
+            c=c+1
+        if c!=0:
+            p = datahandler.getPercentageAttendance(fromDate, toDate, uid)
+        else:
+            return render(request,'adminIndividual.html',{'message':'User not available'})
+        print("Present days ", p['p'])
+        print("Absent days ", p['a'])
+        print("Total days ", p['total_days'])
+        return render(request, 'adminIndividual.html',
+                      {'attendance': p['attendance'], 'adminDetails': request.session.get('adminEmail'),
+                       'uid': request.session.get('adminId'), 'positivePercent': p['p'], 'negativePercent': p['a']})

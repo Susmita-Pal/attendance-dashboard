@@ -11,5 +11,7 @@ urlpatterns = [
     path('user-logout/', views.userLogout, name='userLogout'),
     path('admin-logout/', views.adminLogout, name='adminLogout'),
     path('user-dashboard/',views.dashboardUser,name='dashboardUser'),
-    path('admin-dashboard/',views.dashboardAdmin,name='dashboardAdmin')
+    path('admin-dashboard/',views.dashboardAdmin,name='dashboardAdmin'),
+    path('admin-dashboard/school-view/', views.dashboardAdminSchoolView, name='dashboardAdminSchoolView'),
+    path('admin-dashboard/individual-view/',views.dashboardAdminIndividualView,name='dashboardAdminIndividualView')
 ]
