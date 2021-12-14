@@ -357,6 +357,13 @@ input[type=password]:placeholder {
               <br>
 
     <!-- main -->
+              <!-- Login Form -->
+
+              <form action="" method="post" >
+                {% csrf_token %}
+                <input type="text" id="login" class="fadeIn second" name="email" placeholder="Email id"><br>
+                <input type="password" id="password" class="fadeIn third" name="password" placeholder="Password"><br><br>
+                <input type="submit" class="fadeIn fourth" value="login">
 
       <!-- status message -->
     {% if messages %}
@@ -373,12 +380,6 @@ input[type=password]:placeholder {
     </div>
     {% endif %}
 
-              <!-- Login Form -->
-              <form action="" method="post" >
-                {% csrf_token %}
-                <input type="text" id="login" class="fadeIn second" name="email" placeholder="Email id"><br>
-                <input type="password" id="password" class="fadeIn third" name="password" placeholder="Password"><br><br>
-                <input type="submit" class="fadeIn fourth" value="login">
                 <div id="formFooter">
                     <a class="underlineHover" href="/account/forgot-password-admin/">Reset Password?</a>
                   </div>
