@@ -358,21 +358,6 @@ input[type=password]:placeholder {
 
     <!-- main -->
 
-              <!-- Login Form -->
-              <form action="" method="post" >
-                {% csrf_token %}
-                <input type="text" id="login" class="fadeIn second" name="email" placeholder="Email id"><br>
-                <input type="password" id="password" class="fadeIn third" name="password" placeholder="Password"><br><br>
-                <input type="submit" class="fadeIn fourth" value="login">
-                <div id="formFooter">
-                    <a class="underlineHover" href="/account/forgot-password-admin/">Reset Password?</a>
-                  </div>
-
-              </form>
-
-            </div>
-          </div>
-
       <!-- status message -->
     {% if messages %}
     <div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -387,6 +372,21 @@ input[type=password]:placeholder {
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
     {% endif %}
+
+              <!-- Login Form -->
+              <form action="" method="post" >
+                {% csrf_token %}
+                <input type="text" id="login" class="fadeIn second" name="email" placeholder="Email id"><br>
+                <input type="password" id="password" class="fadeIn third" name="password" placeholder="Password"><br><br>
+                <input type="submit" class="fadeIn fourth" value="login">
+                <div id="formFooter">
+                    <a class="underlineHover" href="/account/forgot-password-admin/">Reset Password?</a>
+                  </div>
+
+              </form>
+
+            </div>
+          </div>
 
 
     <!-- Optional JavaScript; choose one of the two! -->
