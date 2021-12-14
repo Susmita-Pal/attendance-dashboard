@@ -87,7 +87,6 @@ Flask-SQLAlchemy==2.4.0
 Flask-WTF==0.14.3
 future==0.18.2
 gcloud==0.17.0
-GDAL==3.2.1
 geoip2==2.9.0
 geojson==2.5.0
 gitdb==4.0.5
