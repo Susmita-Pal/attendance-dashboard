@@ -161,7 +161,6 @@ mitmproxy==6.0.2
 more-itertools==4.2.0
 msgpack==1.0.0
 msldap==0.2.10
-multidict==5.1.0
 mysqlclient==1.4.4
 Naked==0.1.31
 nassl==4.0.0
