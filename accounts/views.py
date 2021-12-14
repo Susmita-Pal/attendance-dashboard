@@ -112,7 +112,7 @@ def userLogin(request):
                 return render(request,'userlogin.html',{'messages':'Email verification is yet to done'})
         except:
             print("Invalid username/password please try again")
-            return render(request,'userlogin.html',{'messages':'the email and password did not match'})
+            return render(request,'userlogin.html',{'messages':'Invalid Credentials'})
 
 
 def dashboardUser(request):
@@ -182,7 +182,7 @@ def adminLogin(request):
                 return render(request, 'adminlogin.html', {'messages': 'Email verification is yet to done'})
         except:
             print("Invalid username/password please try again")
-            return render(request, 'adminlogin.html', {'messages': 'the email and password did not match'})
+            return render(request, 'adminlogin.html', {'messages': 'Invalid Credentials'})
 
 
 # Logout
