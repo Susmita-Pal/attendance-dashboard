@@ -56,19 +56,20 @@ def getPercentageAttendance(fromDate, toDate, uid):
     first_date = fromDate
     to_date = toDate
     total_days=0
+    o=0
     fromD = datetime.strptime(first_date, "%Y-%m-%d").date()
     toD = datetime.strptime(to_date, "%Y-%m-%d").date()
     fromD.strftime('%d-%m-%Y')
     toD.strftime('%d-%m-%Y')
-
+    print(fromD,toD)
     # print(toD.date()+timedelta(days=1))
+    fromMonthInNum = fromD.month
+    toMonthInNum = toD.month
     while fromD<= toD:
         print(fromD.strftime('%d-%m-%Y'))
         range_of_date.append(fromD.strftime('%d-%m-%Y'))
         fromD = fromD + timedelta(days=1)
     print(range_of_date)
-    fromMonthInNum = fromD.month
-    toMonthInNum = toD.month
     print(fromMonthInNum,toMonthInNum)
     s=0
     print(type(fromMonthInNum))
@@ -113,10 +114,10 @@ def getPercentageAttendance(fromDate, toDate, uid):
                             c = c + 0.5
                 print(per_day_attendance_status)
                 attendance_dict.append(per_day_attendance_status)
-
-        if total_days> 0:
-            total_present_in_range = (c * 100) / total_days
-            total_absent_in_range = (total_days - c) * 100 / total_days
+                o=o+1
+        if o> 0:
+            total_present_in_range = (c * 100) / o
+            total_absent_in_range = (o - c) * 100 / o
             # print(total_present_in_range,total_absent_in_range)
             print(attendance_dict)
 
@@ -182,7 +183,7 @@ def getPercentageAttendance(fromDate, toDate, uid):
             print(attendance_dict)
 
         return {'p': total_present_in_range, 'a': total_absent_in_range, 'total_days':o,
-                    'attendance': attendance_dict}
+                'attendance': attendance_dict}
 
 
 def getPresentAbsent(doc):

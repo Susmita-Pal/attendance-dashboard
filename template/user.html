@@ -88,6 +88,15 @@
     </div>
   </div>
   <hr>
+  <!--Status message-->
+
+      {% if total == 0%}
+  <div class="alert alert-info alert-dismissible fade show" role="alert">
+    <strong>No data available</strong>&nbsp;
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+      {% endif %}
+
   <!-- plot -->
   <div class="container px-5">
     <!-- Display Data -->
