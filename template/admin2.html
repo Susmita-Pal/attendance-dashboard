@@ -97,7 +97,7 @@
     <div class="container px-5">
         <!-- Display Data -->
         <div class="row">
-            <div class="col-lg-4 fs-4">Attendance Logs</div>
+            <div class="col-lg-4 fs-4">Select a view for Attendance Logs</div>
             <div class="col-lg-3"></div>
             <div class="col-lg-5 d-flex">
                 <div class="dropdown me-4">
@@ -111,20 +111,22 @@
                         <li><button class="dropdown-item" onclick="window.location='/account/admin-dashboard/individual-view/'">Individual</button></li>
                     </ul>
                 </div>
+                <!--date form
                 <div>
                     <form method="post">
-                        {% csrf_token %}
+                       {% comment %} {% csrf_token %}{% endcomment %}
                         <input type="date" name="fromDate" id="fromDate">
                         <input class="mx-2" type="date" name="toDate" id="toDate">
                         <input type="submit" value="Go">
                     </form>
                 </div>
+                -->
             </div>
         </div>
         <div class="row mt-4">
+ <!--
             <div class="col">
-                <!-- display Table -->
-                <!-- SCHOOL VIEW -->
+
                 <div id="school_view">
                     <table class="table shadow">
                         <thead>
@@ -137,19 +139,19 @@
                         </thead>
                         <tbody>
                             <tr>
-                                {% for data in attendance %}
+                          {% comment %}      {% for data in attendance %}
                                     <tr>
                                     <td>{{ data.date }}</td>
                                     <td style="background: #F9F9F9;">{{ data.school }}</td>
                                     <td style="background: #F9F9F9;">{{ data.present }}</td>
                                     <td style="background: #F9F9F9;">{{ data.absent }}</td>
                                     </tr>
-                                {% endfor %}
+                                {% endfor %}{% endcomment %}
                             </tr>
                         </tbody>
                      </table>
                 </div>
-                <!-- INDIVIDUAL VIEW -->
+
                 <div id="individual_view" style="display: none;">
                     <table class="table shadow">
                         <thead>
@@ -162,7 +164,7 @@
                         </thead>
                         <tbody>
                             <tr>
-                                {% for data in attendance %}
+                                {% comment %}{% for data in attendance %}
                                 <td>{{ data.date }}</td>
                                 <!-- morinng -->
                                 {% if data.morningStatus == 1 %}
@@ -176,13 +178,14 @@
                                 {% else %}
                                 <td style="background: #F18787;">Absent</td>
                                 {% endif %}
-                                {% endfor %}
+                                {% endfor %}{% endcomment %}
                             </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
+    -->
     </div>
 
 

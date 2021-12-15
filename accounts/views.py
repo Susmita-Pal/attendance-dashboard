@@ -54,7 +54,9 @@ def userRegister(request):
             try:
                 user=auth.create_user_with_email_and_password(email,pwd)
                 emailId=auth.send_email_verification(user['idToken'])
+                print("Email id verification",emailId)
                 token=auth.get_account_info(user['idToken'])
+                print('token',token)
                 uid=token['users'][0]['localId']
                 print("uid",uid)
                 datahandler.setUserRegistration(data,uid)
@@ -96,6 +98,7 @@ def userLogin(request):
         try:
             user=auth.sign_in_with_email_and_password(email,pwd)
             token = auth.get_account_info(user['idToken'])
+            print(token)
             emailVer=token['users'][0]['emailVerified']
             if emailVer == True:
                 print("Yay, you successfully signed in!!!")
@@ -109,6 +112,9 @@ def userLogin(request):
                 return redirect('dashboardUser')
                 #return render(request, 'user.html', {'userDetails':ud,'uid':uid})
             else:
+                #print("I am here")
+                #email_verify_link = auth.generate_email_verification_link(email,action_code_settings={'url':"https://mukham.herokuapp.com/account/user-login/"})
+                #print(email_verify_link)
                 return render(request,'userlogin.html',{'messages':'Email verification is yet to done'})
         except:
             print("Invalid username/password please try again")
@@ -179,6 +185,8 @@ def adminLogin(request):
                     return render(request,'adminlogin.html',{'adminNotLogin':'You are not an admin'})
                 # return render(request, 'user.html', {'userDetails':ud,'uid':uid})
             else:
+                #email_verify_link=auth.generate_email_verification_link(email,action_code_settings=None)
+                #print(email_verify_link)
                 return render(request, 'adminlogin.html', {'messages': 'Email verification is yet to done'})
         except:
             print("Invalid username/password please try again")
