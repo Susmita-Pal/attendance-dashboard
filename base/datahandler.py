@@ -51,6 +51,7 @@ def getUserDetails(email):
 # send percentage
 def getPercentageAttendance(fromDate, toDate, uid):
     range_of_date = []
+    attendance_dict=[]
     total_present_in_range=0
     total_absent_in_range=0
     first_date = fromDate
